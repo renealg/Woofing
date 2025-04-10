@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ boarding.name }}</title>
+</head>
+<body>
+    <h1>{{ boarding.name }}</h1>
+    <p><strong>Country:</strong> {{ boarding.country }}</p>
+    <p><strong>City:</strong> {{ boarding.city }}</p>
+
+    {% if boarding.image %}
+        <img src="{{ boarding.image.url }}" alt="{{ boarding.name }}" width="300">
+    {% else %}
+        <p>No image available</p>
+    {% endif %}
+
+    <p><strong>Capacity:</strong> {{ boarding.capacity }} dogs</p>
+    <p><strong>Price per Night:</strong> ${{ boarding.price_per_night }}</p>
+    <p><strong>Description:</strong> {{ boarding.description }}</p>
+    <a href="/">Back to All boardings</a>
+</body>
+</html>

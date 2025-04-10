@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Woofing - Dog Boardings Website</title>
+    <style>
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .boarding-card {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+        }
+        .boarding-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .boarding-card .info {
+            padding: 15px;
+        }
+        .boarding-card h3 {
+            margin: 0;
+        }
+        .boarding-card a {
+            text-decoration: none;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Available Dog Boardings</h1>
+
+    <!-- Filter Form -->
+    <form method="GET">
+        <label>Price ($):</label>
+        <input type="number" name="price_min" placeholder="Min" value="{{ price_min }}">
+        <input type="number" name="price_max" placeholder="Max" value="{{ price_max }}">
+
+        <label>Country:</label>
+        <input type="text" name="country" placeholder="Enter country" value="{{ country }}">
+
+        <label>City:</label>
+        <input type="text" name="city" placeholder="Enter city" value="{{ city }}">
+
+        <label>Capacity:</label>
+        <input type="number" name="capacity" placeholder="Min dogs" value="{{ capacity }}">
+
+        <button type="submit">Apply Filters</button>
+    </form>
+
+<!--    &lt;!&ndash; Sorting Dropdown &ndash;&gt;-->
+<!--    <div class="sort-container">-->
+<!--        <label for="sort">Sort by:</label>-->
+<!--        <select id="sort" onchange="sortboardings()">-->
+<!--            <option value="price" {% if sort_option == "price" %}selected{% endif %}>Price</option>-->
+<!--            <option value="location" {% if sort_option == "location" %}selected{% endif %}>Location</option>-->
+<!--            <option value="capacity" {% if sort_option == "capacity" %}selected{% endif %}>Capacity</option>-->
+<!--        </select>-->
+<!--    </div>-->
+
+    <!-- boarding Listings -->
+    <div class="container">
+        {% for boarding in boardings %}
+            <div class="boarding-card">
+                {% if boarding.image %}
+                    <img src="{{ boarding.image.url }}" alt="{{ boarding.name }}">
+                {% else %}
+                    <div style="height: 200px; background-color: #f0f0f0; display: flex; justify-content: center; align-items: center;">
+                        <p>No image available</p>
+                    </div>
+                {% endif %}
+                <div class="info">
+                    <h3>{{ boarding.name }}</h3>
+                    <p>{{ boarding.location }} - ${{ boarding.price_per_night }}/night</p>
+                    <p>Capacity: {{ boarding.capacity }} dogs</p>
+                    <a href="{% url 'boarding_detail' boarding.id %}">View Details</a>
+                </div>
+            </div>
+        {% endfor %}
+        {% if not boardings %}
+            <p>No boardings match your criteria. Try adjusting the filters!</p>
+        {% endif %}
+    </div>
+
+    <!-- Link to Add Dog Pension Page -->
+    <a href="{% url 'add_boarding' %}" class="add-boarding-link">Add Your Dog Boarding</a>
+
+    <script>
+        function sortBoardings() {
+            var sortOption = document.getElementById("sort").value;
+            window.location.href = "?sort=" + sortOption;
+        }
+    </script>
+
+</body>
+</html>
