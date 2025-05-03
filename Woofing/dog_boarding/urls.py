@@ -18,9 +18,14 @@ from django.contrib import admin
 from django.urls import path, include  # Import include to connect other apps
 from django.conf import settings
 from django.conf.urls.static import static
+from boardings import views
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),  # Default admin panel URL
+    # path('', include('boardings.urls')),  # Include boardings' app URLs
+    path('', views.home, name='home'),  # the homepage route
+    # path('boardings/', include('boardings.urls')),  # Include boardings' app URLs
     path('', include('boardings.urls')),  # Include boardings' app URLs
 ]
 

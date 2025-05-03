@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'boardings',  # Your main app
     'theme',  # This will be your Tailwind app
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
@@ -52,14 +53,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-TAILWIND_APP_NAME = 'theme'
+TAILWIND_APP_NAME = 'theme'  # This tells Django where to look for your Tailwind CSS configuration
 
 ROOT_URLCONF = 'dog_boarding.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'theme', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -121,6 +122,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'theme/static',  # Adjust the path if necessary
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

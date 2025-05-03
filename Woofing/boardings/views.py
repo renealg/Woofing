@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import DogBoarding
 from .forms import BoardingForm
 
+
 # Create your views here.
 
 
@@ -45,7 +46,8 @@ def boarding_list(request):  # Represents the HTTP request (sent by the user’s
         if sort_option == "location":
             boardings = DogBoarding.objects.filter(approved=True).order_by('location')
         elif sort_option == "capacity":
-            boardings = DogBoarding.objects.filter(approved=True).order_by('capacity')  # Sorting by highest capacity first
+            boardings = DogBoarding.objects.filter(approved=True).order_by(
+                'capacity')  # Sorting by highest capacity first
         else:
             boardings = DogBoarding.objects.filter(approved=True).order_by("price_per_night")
 
@@ -84,3 +86,39 @@ def add_boarding(request):
         form = BoardingForm()  # Create an empty form for the user to fill out
 
     return render(request, 'boardings/add_boarding.html', {'form': form})
+
+
+def home(request):
+    sort = request.GET.get('sort', '')
+    city = request.GET.get('city', '')
+    country = request.GET.get('country', '')
+    capacity = request.GET.get('capacity', '')
+    price_min = request.GET.get('price_min', '')
+    price_max = request.GET.get('price_max', '')
+
+    boardings = DogBoarding.objects.filter(approved=True)
+
+    if city:
+        boardings = boardings.filter(city__icontains=city)
+    if country:
+        boardings = boardings.filter(country__icontains=country)
+    if capacity:
+        boardings = boardings.filter(capacity__gte=capacity)
+    if price_min:
+        boardings = boardings.filter(price_per_night__gte=price_min)
+    if price_max:
+        boardings = boardings.filter(price_per_night__lte=price_max)
+
+    if sort in ['price_per_night', '-price_per_night', 'city', '-city', 'country', '-country', 'capacity', '-capacity']:
+        boardings = boardings.order_by(sort)
+
+    return render(request, 'home.html', {
+        'boardings': boardings,
+        'selected_sort': sort,
+        'city': city,
+        'country': country,
+        'capacity': capacity,
+        'price_min': price_min,
+        'price_max': price_max,
+    })
+

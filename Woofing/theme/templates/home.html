@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1 class="text-4xl font-bold mb-6 text-center">Dog Boardings 🐾🐶</h1>
+
+  <div class="text-left mt-10">
+    <a href="{% url 'add_boarding' %}" style="color: black; font-size: 20px;">
+      ➕ Add Your Dog Boarding
+    </a>
+  </div>
+
+  <br>
+
+  <!-- Sort dropdown -->
+  <div class="mb-6 text-right">
+    <form method="get" class="space-y-4 mb-6">
+
+    <!-- Sort Dropdown (First Row) -->
+    <div class="flex flex-wrap items-center gap-2">
+      <label for="sort_by" class="text-sm font-medium">Sort by:</label>
+      <select name="sort" id="sort_by" class="border border-gray-300 rounded px-3 py-1 text-sm">
+        <option value="">-- Choose --</option>
+        <option value="price_per_night" {% if selected_sort == "price_per_night" %}selected{% endif %}>💰 Price (Low → High)</option>
+        <option value="-price_per_night" {% if selected_sort == "-price_per_night" %}selected{% endif %}>💰 Price (High → Low)</option>
+        <option value="city" {% if selected_sort == "city" %}selected{% endif %}>🏙️ City (A-Z)</option>
+        <option value="-city" {% if selected_sort == "-city" %}selected{% endif %}>🏙️ City (Z-A)</option>
+        <option value="country" {% if selected_sort == "country" %}selected{% endif %}>🌍 Country (A-Z)</option>
+        <option value="-country" {% if selected_sort == "-country" %}selected{% endif %}>🌍 Country (Z-A)</option>
+        <option value="capacity" {% if selected_sort == "capacity" %}selected{% endif %}>🐶 Capacity (Low → High)</option>
+        <option value="-capacity" {% if selected_sort == "-capacity" %}selected{% endif %}>🐶 Capacity (High → Low)</option>
+      </select>
+    </div>
+
+    <!-- Filter Inputs (Second Row) -->
+    <div class="flex flex-wrap items-center gap-4 mt-4">
+      <div>
+        <label for="city" class="block text-sm font-medium">City:</label>
+        <input type="text" name="city" id="city" value="{{ city }}" class="border border-gray-300 rounded px-3 py-1 text-sm w-48">
+      </div>
+      <div>
+        <label for="country" class="block text-sm font-medium">Country:</label>
+        <input type="text" name="country" id="country" value="{{ country }}" class="border border-gray-300 rounded px-3 py-1 text-sm w-48">
+      </div>
+      <div>
+        <label for="capacity" class="block text-sm font-medium">Min Capacity:</label>
+        <input type="number" name="capacity" id="capacity" value="{{ capacity }}" class="border border-gray-300 rounded px-3 py-1 text-sm w-48">
+      </div>
+      <div>
+        <label for="price_min" class="block text-sm font-medium">Min Price:</label>
+        <input type="number" name="price_min" id="price_min" value="{{ price_min }}" class="border border-gray-300 rounded px-3 py-1 text-sm w-48">
+      </div>
+      <div>
+        <label for="price_max" class="block text-sm font-medium">Max Price:</label>
+        <input type="number" name="price_max" id="price_max" value="{{ price_max }}" class="border border-gray-300 rounded px-3 py-1 text-sm w-48">
+      </div>
+    </div>
+
+    <br>
+
+    <!-- Action Buttons (Last Row) -->
+    <div class="flex justify-end gap-2 pt-4">
+      <button type="submit" class="bg-indigo-600 text-black px-4 py-2 rounded hover:bg-indigo-700 transition">
+        Apply Filters
+      </button>
+    </div>
+
+    <br>
+
+    <!-- Action Buttons (Last Row) -->
+    <div class="flex justify-end gap-2 pt-4">
+      <a href="{% url 'home' %}" class="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400 transition">
+        Clear Filters
+      </a>
+    </div>
+  </form>
+  </div>
+
+  <br>
+
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for boarding in boardings %}
+      <div class="bg-white p-4 rounded-xl shadow-md">
+        <h2 class="text-xl font-semibold">{{ boarding.name }}</h2>
+        <p class="text-gray-600 mt-2">{{ boarding.description }}</p>
+        <p class="text-sm mt-1"><strong>Location:</strong> {{ boarding.city }}, {{ boarding.country }}</p>
+        <a href="{% url 'boarding_detail' boarding.id %}" class="text-blue-600 hover:underline mt-4 inline-block">View Details</a>
+      </div>
+    {% empty %}
+      <p>No boardings yet.</p>
+    {% endfor %}
+  </div>
+{% endblock %}
